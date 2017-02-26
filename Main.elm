@@ -132,7 +132,7 @@ subscriptions model =
 parseNotes : String -> List Note
 parseNotes string =
     toLower string
-        |> find All (regex "([a-g,r]+#|[a-g,r])([whqes])(\\d)")
+        |> find All (regex "([a-g,r]+#|[a-g,r])([whqes]+.|[whqes])(\\d)")
         |> List.map .match
         |> List.map noteSorter
 
@@ -148,7 +148,13 @@ noteSorter string =
                Note (frequencies (slice 0 1 string)) (sustain (slice 1 2 string)) (octave (Result.withDefault 0 (toInt (slice 2 3 string))))
 
            4 ->
-               Note (frequencies (slice 0 2 string)) (sustain (slice 2 3 string)) (octave (Result.withDefault 0 (toInt (slice 3 4 string))))
+               if slice 1 2 string == "#" then
+                  Note (frequencies (slice 0 2 string)) (sustain (slice 2 3 string)) (octave (Result.withDefault 0 (toInt (slice 3 4 string))))
+               else
+                  Note (frequencies (slice 0 1 string)) (sustain (slice 1 3 string)) (octave (Result.withDefault 0 (toInt (slice 3 4 string))))
+           
+           5 ->
+               Note (frequencies (slice 0 2 string)) (sustain (slice 2 4 string)) (octave (Result.withDefault 0 (toInt (slice 4 5 string))))
 
            _ ->
                Note 0.0 0.0 0 
@@ -172,6 +178,20 @@ sustain duration =
         "s" ->
             0.25
 
+        "w." ->
+            6.0
+
+        "h." ->
+            3.0
+
+        "q." ->
+            1.5
+
+        "e." ->
+            0.75
+
+        "s." ->
+            0.375
         _ ->
             0.0
 
@@ -299,7 +319,7 @@ bpmInput =
 delay = 
     label
         [ style 
-            [("display", "inline-block")]
+            [("display", "inline-block"), ("color", "#4d4dff")]
         ]
         [ input 
             [ type_ "checkbox", onClick ToggleDelay ] []
@@ -310,8 +330,9 @@ instructions =
     ul [ instructionSytles ]
         [ li [] [ text "Enter notes in the format: CW3 where ..." ]
         , li [] [ text "C is the name of the note to be played (sharps are allowed but no flats yet)" ]
-        , li [] [ text "W is the note duration, where W = whole, H = eigth, Q = quarter, E = eigth, & S = sixteenth" ]
+        , li [] [ text "W is the note duration, where W = whole, H = eigth, Q = quarter, E = eigth, & S = sixteenth.  Add . for dotted" ]
         , li [] [ text "3 equals octave to be played (range of 1 - 9)" ]
+        , li [] [ text "EXAMPLE: gq2gq2gq2d#e.2a#s3gq2d#e.2a#s3gh2   dq3dq3dq3d#e.3a#s.2f#q2d#e.2a#s3gh2  gq3ge.2gs2gq3f#e.3fs3es3d#s3eq3"]
         ]
 
 myStyles =
@@ -328,6 +349,6 @@ instructionSytles =
         , ( "margin", "0 auto" )
         , ( "color", "#777")
         , ( "textAlign", "left")
-        , ( "width", "50%")
+        , ( "width", "80%")
         ]
 

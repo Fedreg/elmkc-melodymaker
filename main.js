@@ -10178,7 +10178,7 @@ var _user$project$Main$instructionSytles = _elm_lang$html$Html_Attributes$style(
 					_0: {ctor: '_Tuple2', _0: 'textAlign', _1: 'left'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'width', _1: '50%'},
+						_0: {ctor: '_Tuple2', _0: 'width', _1: '80%'},
 						_1: {ctor: '[]'}
 					}
 				}
@@ -10237,7 +10237,7 @@ var _user$project$Main$instructions = A2(
 					{ctor: '[]'},
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('W is the note duration, where W = whole, H = eigth, Q = quarter, E = eigth, & S = sixteenth'),
+						_0: _elm_lang$html$Html$text('W is the note duration, where W = whole, H = eigth, Q = quarter, E = eigth, & S = sixteenth.  Add . for dotted'),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
@@ -10250,7 +10250,18 @@ var _user$project$Main$instructions = A2(
 							_0: _elm_lang$html$Html$text('3 equals octave to be played (range of 1 - 9)'),
 							_1: {ctor: '[]'}
 						}),
-					_1: {ctor: '[]'}
+					_1: {
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$li,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('EXAMPLE: gq2gq2gq2d#e.2a#s3gq2d#e.2a#s3gh2   dq3dq3dq3d#e.3a#s.2f#q2d#e.2a#s3gh2  gq3ge.2gs2gq3f#e.3fs3es3d#s3eq3'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {ctor: '[]'}
+					}
 				}
 			}
 		}
@@ -10312,6 +10323,16 @@ var _user$project$Main$sustain = function (duration) {
 			return 0.5;
 		case 's':
 			return 0.25;
+		case 'w.':
+			return 6.0;
+		case 'h.':
+			return 3.0;
+		case 'q.':
+			return 1.5;
+		case 'e.':
+			return 0.75;
+		case 's.':
+			return 0.375;
 		default:
 			return 0.0;
 	}
@@ -10362,7 +10383,9 @@ var _user$project$Main$noteSorter = function (string) {
 						_elm_lang$core$String$toInt(
 							A3(_elm_lang$core$String$slice, 2, 3, string)))));
 		case 4:
-			return A3(
+			return _elm_lang$core$Native_Utils.eq(
+				A3(_elm_lang$core$String$slice, 1, 2, string),
+				'#') ? A3(
 				_user$project$Main$Note,
 				_user$project$Main$frequencies(
 					A3(_elm_lang$core$String$slice, 0, 2, string)),
@@ -10373,7 +10396,31 @@ var _user$project$Main$noteSorter = function (string) {
 						_elm_lang$core$Result$withDefault,
 						0,
 						_elm_lang$core$String$toInt(
+							A3(_elm_lang$core$String$slice, 3, 4, string))))) : A3(
+				_user$project$Main$Note,
+				_user$project$Main$frequencies(
+					A3(_elm_lang$core$String$slice, 0, 1, string)),
+				_user$project$Main$sustain(
+					A3(_elm_lang$core$String$slice, 1, 3, string)),
+				_user$project$Main$octave(
+					A2(
+						_elm_lang$core$Result$withDefault,
+						0,
+						_elm_lang$core$String$toInt(
 							A3(_elm_lang$core$String$slice, 3, 4, string)))));
+		case 5:
+			return A3(
+				_user$project$Main$Note,
+				_user$project$Main$frequencies(
+					A3(_elm_lang$core$String$slice, 0, 2, string)),
+				_user$project$Main$sustain(
+					A3(_elm_lang$core$String$slice, 2, 4, string)),
+				_user$project$Main$octave(
+					A2(
+						_elm_lang$core$Result$withDefault,
+						0,
+						_elm_lang$core$String$toInt(
+							A3(_elm_lang$core$String$slice, 4, 5, string)))));
 		default:
 			return A3(_user$project$Main$Note, 0.0, 0.0, 0);
 	}
@@ -10390,7 +10437,7 @@ var _user$project$Main$parseNotes = function (string) {
 			A3(
 				_elm_lang$core$Regex$find,
 				_elm_lang$core$Regex$All,
-				_elm_lang$core$Regex$regex('([a-g,r]+#|[a-g,r])([whqes])(\\d)'),
+				_elm_lang$core$Regex$regex('([a-g,r]+#|[a-g,r])([whqes]+.|[whqes])(\\d)'),
 				_elm_lang$core$String$toLower(string))));
 };
 var _user$project$Main$PlayBundle = F4(
@@ -10406,7 +10453,11 @@ var _user$project$Main$delay = A2(
 			{
 				ctor: '::',
 				_0: {ctor: '_Tuple2', _0: 'display', _1: 'inline-block'},
-				_1: {ctor: '[]'}
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: 'color', _1: '#4d4dff'},
+					_1: {ctor: '[]'}
+				}
 			}),
 		_1: {ctor: '[]'}
 	},
