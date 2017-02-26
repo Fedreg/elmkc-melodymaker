@@ -139,15 +139,19 @@ parseNotes string =
 
 noteSorter : String -> Note
 noteSorter string =
-    case (String.length string) of
-        3 ->
-            Note (frequencies (slice 0 1 string)) (sustain (slice 1 2 string)) (octave (Result.withDefault 0 (toInt (slice 2 3 string))))
+     let 
+        _ = Debug.log "Note_" string
+    in
 
-        4 ->
-            Note (frequencies (slice 0 2 string)) (sustain (slice 2 3 string)) (octave (Result.withDefault 0 (toInt (slice 3 4 string))))
+       case (String.length string) of
+           3 ->
+               Note (frequencies (slice 0 1 string)) (sustain (slice 1 2 string)) (octave (Result.withDefault 0 (toInt (slice 2 3 string))))
 
-        _ ->
-            Note 0.0 0.0 0 
+           4 ->
+               Note (frequencies (slice 0 2 string)) (sustain (slice 2 3 string)) (octave (Result.withDefault 0 (toInt (slice 3 4 string))))
+
+           _ ->
+               Note 0.0 0.0 0 
 
 
 sustain : String -> Float
@@ -240,7 +244,7 @@ tempo bpm =
 
 view : Model -> Html Msg
 view model =
-    div [ style [ ( "textAlign", "center" ), ("color", "#444") ] ]
+    div [ style [ ( "textAlign", "center" ), ("color", "#888") ] ]
         [ h1 [ style [ ( "textDecoration", "underline" ), ( "margin", "150px auto 50px" ) ] ] [ text "Elm Melody Maker" ]
         , noteInputField 
         , bpmInput
@@ -312,9 +316,9 @@ instructions =
 
 myStyles =
    style
-      [ ("backgroundColor", "#fff")
-      , ("color", "#333")
-      , ("border", "1px solid #777")
+      [ ("backgroundColor", "#111")
+      , ("color", "#4d4dff")
+      , ("border", "1px solid #4d4dff")
       , ("margin", " 1rem 20px")
       ]
 
@@ -322,7 +326,7 @@ instructionSytles =
     style
         [ ( "listStyle", "none" )
         , ( "margin", "0 auto" )
-        , ( "color", "#333")
+        , ( "color", "#777")
         , ( "textAlign", "left")
         , ( "width", "50%")
         ]
