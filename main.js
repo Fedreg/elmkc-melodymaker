@@ -10172,7 +10172,7 @@ var _user$project$Main$instructionSytles = _elm_lang$html$Html_Attributes$style(
 			_0: {ctor: '_Tuple2', _0: 'margin', _1: '0 auto'},
 			_1: {
 				ctor: '::',
-				_0: {ctor: '_Tuple2', _0: 'color', _1: '#777'},
+				_0: {ctor: '_Tuple2', _0: 'color', _1: '#555'},
 				_1: {
 					ctor: '::',
 					_0: {ctor: '_Tuple2', _0: 'textAlign', _1: 'left'},
@@ -10662,18 +10662,55 @@ var _user$project$Main$update = F2(
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 			case 'SendNotes':
+				var note2 = _elm_lang$core$Maybe$Just(
+					A3(
+						_user$project$Main$Note,
+						_user$project$Main$frequencies('a'),
+						_user$project$Main$sustain('q'),
+						_user$project$Main$octave(3)));
+				var note = _elm_lang$core$Maybe$Just(
+					A3(
+						_user$project$Main$Note,
+						_user$project$Main$frequencies('c'),
+						_user$project$Main$sustain('q'),
+						_user$project$Main$octave(3)));
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{index: model.index + 1}),
-					_1: _user$project$Main$send(
-						A4(
-							_user$project$Main$PlayBundle,
-							A2(_elm_community$list_extra$List_Extra$getAt, model.index, model.notesToSend),
-							_user$project$Main$tempo(model.bpm),
-							model.waveType,
-							model.addDelay))
+					_1: _elm_lang$core$Platform_Cmd$batch(
+						{
+							ctor: '::',
+							_0: _user$project$Main$send(
+								A4(
+									_user$project$Main$PlayBundle,
+									A2(_elm_community$list_extra$List_Extra$getAt, model.index, model.notesToSend),
+									_user$project$Main$tempo(model.bpm),
+									model.waveType,
+									model.addDelay)),
+							_1: {
+								ctor: '::',
+								_0: _user$project$Main$send(
+									A4(
+										_user$project$Main$PlayBundle,
+										note,
+										_user$project$Main$tempo(model.bpm),
+										model.waveType,
+										model.addDelay)),
+								_1: {
+									ctor: '::',
+									_0: _user$project$Main$send(
+										A4(
+											_user$project$Main$PlayBundle,
+											note2,
+											_user$project$Main$tempo(model.bpm),
+											model.waveType,
+											model.addDelay)),
+									_1: {ctor: '[]'}
+								}
+							}
+						})
 				};
 			case 'ChangeBPM':
 				return {
@@ -10750,7 +10787,7 @@ var _user$project$Main$view = function (model) {
 					_0: {ctor: '_Tuple2', _0: 'textAlign', _1: 'center'},
 					_1: {
 						ctor: '::',
-						_0: {ctor: '_Tuple2', _0: 'color', _1: '#888'},
+						_0: {ctor: '_Tuple2', _0: 'color', _1: '#555'},
 						_1: {ctor: '[]'}
 					}
 				}),

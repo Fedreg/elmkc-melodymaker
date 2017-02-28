@@ -33,17 +33,17 @@
 
                 else if (addDelay === true) {
                     var delay = ctx.createDelay();
-                    var delay2 = ctx.createDelay();
-                    delay.delayTime.value = 0.35;
-                    delay2.delayTime.value = 0.5;
+                    delay.delayTime.value = 0.75;
+                    var feedback = ctx.createGain();
+                    feedback.gain.value = 0.6;
+
+                    delay.connect(feedback);
+                    feedback.connect(delay);
+                    
                     osc.connect(gainNode);
-                    gainNode.connect(ctx.destination);
                     gainNode.connect(delay);
-                    gainNode.connect(delay2);
-                    delay.connect(gainNode);
-                    delay2.connect(gainNode);
+                    gainNode.connect(ctx.destination);
                     delay.connect(ctx.destination);
-                    delay2.connect(ctx.destination);        
                 }
                 gainNode.gain.value = 0.0;
                 gainNode.gain.setTargetAtTime(0.75, ctx.currentTime, 0.1);

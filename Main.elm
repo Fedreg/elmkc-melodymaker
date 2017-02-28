@@ -99,9 +99,16 @@ update msg model =
             ( { model | index = 0 }, Cmd.none)
 
         SendNotes ->
+            let
+               note = 
+                  Just (Note (frequencies "c") (sustain "q") (octave 3))
+               note2 = 
+                  Just (Note (frequencies "a") (sustain "q") (octave 3))
+            in
             ( { model | index = model.index +1}
-            , send (PlayBundle (getAt model.index model.notesToSend) (tempo model.bpm) model.waveType model.addDelay))
-            
+            , Cmd.batch [send (PlayBundle (getAt model.index model.notesToSend) (tempo model.bpm) model.waveType model.addDelay)
+            , send (PlayBundle note (tempo model.bpm) model.waveType model.addDelay)
+            , send (PlayBundle note2 (tempo model.bpm) model.waveType model.addDelay)])
         ChangeBPM text ->
             ( { model | bpm = Result.withDefault 128 (String.toInt text) }, Cmd.none )
 
@@ -264,7 +271,7 @@ tempo bpm =
 
 view : Model -> Html Msg
 view model =
-    div [ style [ ( "textAlign", "center" ), ("color", "#888") ] ]
+    div [ style [ ( "textAlign", "center" ), ("color", "#555") ] ]
         [ h1 [ style [ ( "textDecoration", "underline" ), ( "margin", "150px auto 50px" ) ] ] [ text "Elm Melody Maker" ]
         , noteInputField 
         , bpmInput
@@ -332,7 +339,7 @@ instructions =
         , li [] [ text "C is the name of the note to be played (sharps are allowed but no flats yet)" ]
         , li [] [ text "W is the note duration, where W = whole, H = eigth, Q = quarter, E = eigth, & S = sixteenth.  Add . for dotted" ]
         , li [] [ text "3 equals octave to be played (range of 1 - 9)" ]
-        , li [] [ text "EXAMPLE: gq2gq2gq2d#e.2a#s3gq2d#e.2a#s3gh2   dq3dq3dq3d#e.3a#s.2f#q2d#e.2a#s3gh2  gq3ge.2gs2gq3f#e.3fs3es3d#s3eq3"]
+        , li [] [ text "EXAMPLES: gq2gq2gq2d#e.2a#s3gq2d#e.2a#s3gh2   dq3dq3dq3d#e.3a#s.2f#q2d#e.2a#s3gh2  gq3ge.2gs2gq3f#e.3fs3es3d#s3eq3 OR dq.4eq.4fq.4gq.4 aq.4fq.4gq.4dq.4  "]
         ]
 
 myStyles =
@@ -347,7 +354,7 @@ instructionSytles =
     style
         [ ( "listStyle", "none" )
         , ( "margin", "0 auto" )
-        , ( "color", "#777")
+        , ( "color", "#555")
         , ( "textAlign", "left")
         , ( "width", "80%")
         ]
